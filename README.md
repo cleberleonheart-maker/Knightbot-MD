@@ -221,7 +221,7 @@ The PM2 config already applies the memory limits (`512MB` heap, restart over `40
 - If the panel supports node arguments, use `--max-old-space-size=512 --optimize-for-size`
 - Non-interactive panels show an auto pairing code using `OWNER_NUMBER`/`PHONE_NUMBER` from `.env`
 
-**On Termux (Android):**
+**On Termux (Android):** *(guiu completo em [`TERMUX.md`](TERMUX.md))*
 
 ```bash
 pkg update && pkg upgrade
