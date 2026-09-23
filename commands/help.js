@@ -35,6 +35,7 @@ async function helpCommand(sock, chatId, message) {
 ║ ➤ .ss <link>
 ║ ➤ .jid
 ║ ➤ .url
+║ ➤ .base64 <text>
 ╚═══════════════════╝ 
 
 ╔═══════════════════╗

@@ -92,6 +92,42 @@ For further customization and setup guidance, click the button below:
 
 ---
 
+### ➕ Adding a New Command
+
+Commands are self-registering — no need to touch `main.js` or the command switch.
+
+1. Create a file in `commands/register/` (e.g. `commands/register/hello.js`):
+
+    ```js
+    const { registry } = require('../../lib/commandRegistry');
+
+    registry.register({
+        aliases: ['hello', 'hi'],
+        category: 'utils',          // utils | fun | admin | owner | games | media | ai
+        usage: '.hello <name>',
+        desc: 'Say hello',
+        prefixMatch: false,         // true = also match ".hello extra args" (extracts ctx.text)
+        cooldown: 3,                // optional seconds between uses
+        groupOnly: false,
+        adminOnly: false,
+        ownerOnly: false,
+        run: async (ctx) => {
+            // ctx = { sock, chatId, senderId, message, userMessage,
+            //         rawText, text, args, isGroup, senderIsSudo, channelInfo }
+            const name = ctx.text || 'there';
+            await ctx.sock.sendMessage(ctx.chatId, { text: `Hello ${name}!`, ...ctx.channelInfo });
+        },
+    });
+    ```
+
+2. Restart the bot. The command is available immediately, with permission guards
+   (owner/admin/group) and cooldown handled automatically by the registry.
+
+Shared helpers live in `lib/`, and classic commands that are not yet migrated remain
+in the legacy switch inside `main.js`.
+
+---
+
 ## ⚙️ Features
 
 - **Tag all group members** with the `.tagall` command

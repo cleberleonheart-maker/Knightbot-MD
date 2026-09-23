@@ -141,6 +141,10 @@ const { pmblockerCommand, readState: readPmBlockerState } = require('./commands/
 const settingsCommand = require('./commands/settings');
 const soraCommand = require('./commands/sora');
 
+// Dynamic command registry (commands self-register in ./commands/register)
+const { dispatchRegistry } = require('./lib/commandRegistry');
+require('./lib/commandLoader');
+
 // Global settings
 global.packname = settings.packname;
 global.author = settings.author;
@@ -332,6 +336,20 @@ async function handleMessages(sock, messageUpdate, printLog) {
         // Command handlers - Execute commands immediately without waiting for typing indicator
         // We'll show typing indicator after command execution if needed
         let commandExecuted = false;
+
+        // Dynamic registry: new commands dispatch here first, no switch-case edits needed
+        if (userMessage.startsWith('.')) {
+            const handled = await dispatchRegistry({
+                sock, chatId, senderId, message,
+                userMessage, rawText, isGroup, senderIsSudo, channelInfo,
+            });
+            if (handled) {
+                commandExecuted = true;
+                await addCommandReaction(sock, message);
+                await showTypingAfterCommand(sock, chatId);
+                return;
+            }
+        }
 
         switch (true) {
             case userMessage === '.simage': {
