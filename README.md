@@ -124,7 +124,7 @@ It is lightweight and can be easily customized to add more commands as per your 
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/mruniquehacker/Knightbot-MD.git
+    git clone https://github.com/cleberleonheart-maker/Knightbot-MD.git
     cd Knightbot-MD
     ```
 
@@ -134,15 +134,25 @@ It is lightweight and can be easily customized to add more commands as per your 
     npm install
     ```
 
-3. **Run the bot:**
+3. **Configure the bot (optional but recommended):**
+
+    Copy `.env.example` to `.env` and edit it with your owner number, bot name and API keys:
 
     ```bash
-    node index.js
+    cp .env.example .env
     ```
 
-4. **Scan the QR code:**
+    At minimum, set `OWNER_NUMBER` (your WhatsApp number with country code, no `+` or spaces).
 
-    Once the bot starts, a QR code will appear in the terminal. Scan this QR code using the Linked Devices feature in WhatsApp to connect your WhatsApp account with the bot.
+4. **Run the bot:**
+
+    ```bash
+    npm start
+    ```
+
+5. **Scan the QR code / enter pairing code:**
+
+    Once the bot starts, a QR code (or pairing code) will appear in the terminal. Scan this QR code using the Linked Devices feature in WhatsApp to connect your WhatsApp account with the bot. On non-interactive hosts, add the pairing number via `PHONE_NUMBER` in `.env`.
 
 ---
 

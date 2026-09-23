@@ -70,7 +70,7 @@ setInterval(() => {
     }
 }, 30_000) // check every 30 seconds
 
-let phoneNumber = "911234567890"
+let phoneNumber = process.env.PHONE_NUMBER || settings.ownerNumber || "911234567890"
 let owner = JSON.parse(fs.readFileSync('./data/owner.json'))
 
 global.botname = "KNIGHT BOT"
@@ -106,7 +106,8 @@ async function startXeonBotInc() {
         },
         markOnlineOnConnect: true,
         generateHighQualityLinkPreview: true,
-        syncFullHistory: true,
+        // Workaround GHSA-qvv5-jq5g-4cgg: disable automatic history sync
+        shouldSyncHistoryMessage: () => false,
         getMessage: async (key) => {
             let jid = jidNormalizedUser(key.remoteJid)
             let msg = await store.loadMessage(jid, key.id)
@@ -123,6 +124,8 @@ async function startXeonBotInc() {
         try {
             const mek = chatUpdate.messages[0]
             if (!mek.message) return
+            // Workaround GHSA-qvv5-jq5g-4cgg: drop spoofed upserts carrying a requestId
+            if (mek.key && mek.key.requestId) return
             mek.message = (Object.keys(mek.message)[0] === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
             if (mek.key && mek.key.remoteJid === 'status@broadcast') {
                 await handleStatus(XeonBotInc, chatUpdate);
@@ -326,6 +329,7 @@ async function startXeonBotInc() {
 
     XeonBotInc.ev.on('messages.upsert', async (m) => {
         if (m.messages[0].key && m.messages[0].key.remoteJid === 'status@broadcast') {
+            if (m.messages[0].key && m.messages[0].key.requestId) return;
             await handleStatus(XeonBotInc, m);
         }
     });
