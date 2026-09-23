@@ -221,6 +221,39 @@ The PM2 config already applies the memory limits (`512MB` heap, restart over `40
 - If the panel supports node arguments, use `--max-old-space-size=512 --optimize-for-size`
 - Non-interactive panels show an auto pairing code using `OWNER_NUMBER`/`PHONE_NUMBER` from `.env`
 
+**On Termux (Android):**
+
+```bash
+pkg update && pkg upgrade
+pkg install nodejs-lts git ffmpeg tmux -y
+
+git clone https://github.com/cleberleonheart-maker/Knightbot-MD
+cd Knightbot-MD
+npm install
+
+cp .env.example .env      # set OWNER_NUMBER to your number
+npm start
+```
+
+Keep the bot alive when the app is closed:
+
+```bash
+termux-wake-lock            # keep the phone awake
+tmux new -s bot -d          # detached background session
+./run.sh start              # run inside tmux
+tmux attach -t bot          # come back to the logs later (exit: Ctrl+B then D)
+```
+
+If `npm install` fails while building **sharp** (common on Termux due to
+native binaries):
+
+```bash
+pkg install binutils make python -y
+npm install --build-from-source 2>/dev/null || npm install
+```
+
+Run the first time with `./run.sh fresh` to generate the pairing code.
+
 ---
 
 
