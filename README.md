@@ -192,6 +192,37 @@ It is lightweight and can be easily customized to add more commands as per your 
 
 ---
 
+### 🔄 Running & Keeping it Alive
+
+**Quick launch** (menu-based helper):
+
+```bash
+./run.sh start       # normal start (optimized memory flags)
+./run.sh clean       # clean temp files then start
+./run.sh fresh       # reset session and start again (new login)
+./run.sh logs        # tail logs (nohup.out)
+```
+
+**With PM2** (recommended for 24/7 hosts — auto-restart on crash/reboot):
+
+```bash
+npm install -g pm2
+pm2 start ecosystem.config.js    # starts the bot
+pm2 save && pm2 startup          # restart on server reboot
+pm2 logs knightbot               # watch the logs
+pm2 restart knightbot            # restart manually
+pm2 monit                        # live CPU/RAM dashboard
+```
+
+The PM2 config already applies the memory limits (`512MB` heap, restart over `400MB`).
+
+**On web panels (bot-hosting / Replit / etc.):**
+- Start command: `npm start` (or `./run.sh start`)
+- If the panel supports node arguments, use `--max-old-space-size=512 --optimize-for-size`
+- Non-interactive panels show an auto pairing code using `OWNER_NUMBER`/`PHONE_NUMBER` from `.env`
+
+---
+
 
 ## 📄 License
 
